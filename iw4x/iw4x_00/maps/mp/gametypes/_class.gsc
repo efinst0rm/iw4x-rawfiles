@@ -356,6 +356,62 @@ giveLoadout( team, class, allowCopycat )
 		loadoutOffhand = cac_getOffhand( class_num );
 		loadoutDeathStreak = cac_getDeathstreak( class_num );
 	}
+	else if ( class == "gamemode" )
+	{
+		gamemodeLoadout = self.pers["gamemodeLoadout"];
+
+		loadoutPrimary = gamemodeLoadout["loadoutPrimary"];
+		loadoutPrimaryAttachment = gamemodeLoadout["loadoutPrimaryAttachment"];
+		loadoutPrimaryAttachment2 = gamemodeLoadout["loadoutPrimaryAttachment2"] ;
+		loadoutPrimaryCamo = gamemodeLoadout["loadoutPrimaryCamo"];
+		loadoutSecondary = gamemodeLoadout["loadoutSecondary"];		
+		loadoutSecondaryAttachment = gamemodeLoadout["loadoutSecondaryAttachment"];
+		loadoutSecondaryAttachment2 = gamemodeLoadout["loadoutSecondaryAttachment2"];
+		loadoutSecondaryCamo = gamemodeLoadout["loadoutSecondaryCamo"];
+		
+		//	replace the placeholder throwing knife with the valid secondary if there is one
+		if ( loadoutPrimary == "throwingknife" && loadoutSecondary != "none" )
+		{
+			loadoutPrimary = loadoutSecondary;
+			loadoutPrimaryAttachment = loadoutSecondaryAttachment;
+			loadoutPrimaryAttachment2 = loadoutSecondaryAttachment2;
+			loadoutPrimaryCamo = loadoutSecondaryCamo;
+			
+			loadoutSecondary = "none";
+			loadoutSecondaryAttachment = "none";
+			loadoutSecondaryAttachment2 = "none";
+			loadoutSecondaryCamo = "none";			
+		}	
+		//	otherwise replace with normal default for invalid class
+		else if ( loadoutPrimary == "throwingknife" && loadoutSecondary == "none" )
+		{
+			loadoutPrimary = table_getWeapon( level.classTableName, 10, 1 );
+		}	
+		
+		loadoutEquipment = gamemodeLoadout["loadoutEquipment"];
+		loadoutOffhand = gamemodeLoadout["loadoutOffhand"];
+		//	hack, until game mode default class data can be reset
+		if ( loadoutOffhand == "specialty_null" )
+			loadoutOffhand = "none";	
+		loadoutPerk1 = gamemodeLoadout["loadoutPerk1"];
+		loadoutPerk2 = gamemodeLoadout["loadoutPerk2"];
+		loadoutPerk3 = gamemodeLoadout["loadoutPerk3"];
+		
+		if ( level.killstreakRewards )
+		{
+			loadoutKillstreak1 = gamemodeLoadout["loadoutKillstreak1"];
+			loadoutKillstreak2 = gamemodeLoadout["loadoutKillstreak2"];
+			loadoutKillstreak3 = gamemodeLoadout["loadoutKillstreak3"];			
+		}
+		else 
+		{
+			loadoutKillstreak1 = "none";
+			loadoutKillstreak2 = "none";
+			loadoutKillstreak3 = "none";			
+		}
+		
+		loadoutDeathStreak = gamemodeLoadout["loadoutDeathstreak"];		
+	}
 	else
 	{
 		class_num = getClassIndex( class );
