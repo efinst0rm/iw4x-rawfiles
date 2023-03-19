@@ -303,6 +303,8 @@ giveLoadout( team, class, allowCopycat )
 {
 	self takeAllWeapons();
 	
+	self.changingWeapon = undefined;
+	
 	primaryIndex = 0;
 	
 	// initialize specialty array
@@ -312,7 +314,15 @@ giveLoadout( team, class, allowCopycat )
 		allowCopycat = true;
 
 	primaryWeapon = undefined;
+	
+	clearAmmo = false;
 
+	//	set in game mode custom class
+	loadoutKillstreak1 = undefined;
+	loadoutKillstreak2 = undefined;
+	loadoutKillstreak3 = undefined;	
+	
+	clonedLoadout = [];
 	if ( isDefined( self.pers["copyCatLoadout"] ) && self.pers["copyCatLoadout"]["inUse"] && allowCopycat )
 	{
 		self maps\mp\gametypes\_class::setClass( "copycat" );
@@ -385,7 +395,9 @@ giveLoadout( team, class, allowCopycat )
 		//	otherwise replace with normal default for invalid class
 		else if ( loadoutPrimary == "throwingknife" && loadoutSecondary == "none" )
 		{
-			loadoutPrimary = table_getWeapon( level.classTableName, 10, 1 );
+			clearAmmo = true;
+			loadoutPrimary = "usp";
+			loadoutPrimaryAttachment = "tactical";
 		}	
 		
 		loadoutEquipment = gamemodeLoadout["loadoutEquipment"];
@@ -433,8 +445,10 @@ giveLoadout( team, class, allowCopycat )
 		loadoutOffhand = table_getOffhand( level.classTableName, class_num );
 		loadoutDeathstreak = table_getDeathstreak( level.classTableName, class_num );
 	}
+	
+	isGameModeClass = ( class == "gamemode" );
 
-	if ( !(isDefined( self.pers["copyCatLoadout"] ) && self.pers["copyCatLoadout"]["inUse"] && allowCopycat) )
+	if ( !isGameModeClass && !(isDefined( self.pers["copyCatLoadout"] ) && self.pers["copyCatLoadout"]["inUse"] && allowCopycat) )
 	{
 		isCustomClass = isSubstr( class, "custom" );
 		
@@ -604,6 +618,13 @@ giveLoadout( team, class, allowCopycat )
 	primaryWeapon = primaryName;
 	self.primaryWeapon = primaryWeapon;
 	self.secondaryWeapon = secondaryName;
+	
+	//	clear ammo for created default classes using placeholder gun when primary and secondary was set to none
+	if ( clearAmmo )
+	{
+		self SetWeaponAmmoClip( self.primaryWeapon, 0 );
+		self SetWeaponAmmoStock( self.primaryWeapon, 0 );
+	}
 
 	self maps\mp\gametypes\_teams::playerModelForWeapon( self.pers["primaryWeapon"], getBaseWeaponName( secondaryName ) );
 		
