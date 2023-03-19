@@ -553,7 +553,7 @@ addToTeam( team, firstConnect )
 	self.team = team;
 	
 	// session team is readonly in ranked matches on console
-	if ( !matchMakingGame() || isDefined( self.pers["isBot"] ) || allowTeamChoice() )
+	if ( !matchMakingGame() || isDefined( self.pers["isBot"] ) || !allowTeamChoice() )
 	{
 		if ( level.teamBased )
 		{
