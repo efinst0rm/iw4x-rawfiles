@@ -11,3 +11,4 @@ ctf
 gtnw
 conf
 gun
+infect
